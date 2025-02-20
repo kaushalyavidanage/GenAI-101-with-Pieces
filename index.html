@@ -1,0 +1,32 @@
+<script>
+    let dogFacts = [];
+
+    // Fetch the dog facts from the external JSON file
+    fetch('dogFacts.json')
+        .then(response => response.json())
+        .then(data => {
+            dogFacts = data.dogFacts; // Store the fetched facts in the dogFacts array
+        })
+        .catch(error => console.error('Error loading dog facts:', error));
+
+    document.getElementById('factButton').addEventListener('click', function() {
+        if (dogFacts.length === 0) {
+            alert('Dog facts are still loading. Please try again later.');
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * dogFacts.length);
+        const randomFact = dogFacts[randomIndex].fact;
+
+        const factElement = document.getElementById('fact');
+        factElement.textContent = randomFact;
+        factElement.classList.remove('show'); // Reset opacity for animation
+        void factElement.offsetWidth; // Trigger reflow to restart animation
+        factElement.classList.add('show'); // Fade in effect
+
+        // Update Twitter share link
+        const twitterShare = document.getElementById('twitterShare');
+        twitterShare.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(randomFact)}`;
+        twitterShare.style.display = 'inline-block'; // Show the share button
+    });
+</script>
